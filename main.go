@@ -9,7 +9,7 @@ import (
 	"github.com/s-rah/onionscan/onionscan/steps"
 	"github.com/s-rah/onionscan/report"
 	"github.com/s-rah/onionscan/utils"
-	"github.com/s-rah/onionscan/webui"
+	"github.com/Ekkoz/onionscan/webui"
 	"golang.org/x/crypto/ssh/terminal"
 	"io/ioutil"
 	"log"
@@ -39,7 +39,8 @@ func main() {
 	dbdir := flag.String("dbdir", "./onionscandb", "The directory where the crawl database will be stored")
 	crawlconfigdir := flag.String("crawlconfigdir", "", "A directory where crawl configurations are stored")
 	scans := flag.String("scans", "", "a comma-separated list of scans to run e.g. web,tls,... (default: run all)")
-	webport := flag.Int("webport", 8080, "if given, onionscan will expose a webserver on localhost:[port] to enabled searching of the database")
+	webport := flag.Int("webport", 8080, "set a custom listening port for onionscan to expose a webserver on [ip]:[port] to enabled searching of the database")
+	webip := flag.String("webip", "127.0.0.1", "set a custom listening ip for onionscan to expose a webserver on [ip]:[port] to enabled searching of the database")
 	mode := flag.String("mode", "scan", "one of scan or analysis. In analysis mode, webport must be set.")
 	cookiestring := flag.String("cookie", "", "if provided, onionscan will use this cookie")
 
@@ -97,7 +98,7 @@ func main() {
 	// Start up the web ui.
 	webui := new(webui.WebUI)
 	if *webport > 0 {
-		go webui.Listen(onionScan.Config, *webport)
+		go webui.Listen(onionScan.Config, *webip, *webport)
 		<-webui.Done
 	}
 }

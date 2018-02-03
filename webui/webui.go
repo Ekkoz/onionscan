@@ -425,7 +425,7 @@ func (wui *WebUI) Index(w http.ResponseWriter, r *http.Request) {
 	templates.ExecuteTemplate(w, "index.html", content)
 }
 
-func (wui *WebUI) Listen(osc *config.OnionScanConfig, port int) {
+func (wui *WebUI) Listen(osc *config.OnionScanConfig, ip string, port int) {
 	wui.osc = osc
 
 	// We generate a random token on startup to mitigate the threat
@@ -455,5 +455,5 @@ func (wui *WebUI) Listen(osc *config.OnionScanConfig, port int) {
 	http.Handle("/fonts/", http.StripPrefix("/fonts/", fs))
 
 	portstr := strconv.Itoa(port)
-	http.ListenAndServe("127.0.0.1:"+portstr, nil)
+	http.ListenAndServe(ip+":"+portstr, nil)
 }
